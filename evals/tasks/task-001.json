@@ -1,0 +1,66 @@
+{
+  "id": "task-001",
+  "name": "Verificación Integral de Arquitectura, Tipos, Tests y Scraping Multiplataforma",
+  "checks": [
+    {
+      "id": "check-agents-anchor",
+      "description": "El archivo maestro AGENTS.md debe existir en la raíz",
+      "type": "file_exists",
+      "path": "AGENTS.md"
+    },
+    {
+      "id": "check-handoff-state",
+      "description": "El archivo de snapshot de estado HANDOFF.md debe existir",
+      "type": "file_exists",
+      "path": "HANDOFF.md"
+    },
+    {
+      "id": "check-changelog-keep",
+      "description": "El archivo CHANGELOG.md debe existir",
+      "type": "file_exists",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "id": "check-docs-index",
+      "description": "La matriz de trazabilidad docs/INDEX.md debe existir",
+      "type": "file_exists",
+      "path": "docs/INDEX.md"
+    },
+    {
+      "id": "check-invariants-rules",
+      "description": "El contrato de invariantes .agents/rules/invariants.md debe existir",
+      "type": "file_exists",
+      "path": ".agents/rules/invariants.md"
+    },
+    {
+      "id": "check-instagram-adapter",
+      "description": "El adaptador de Instagram debe existir en src/adapters/",
+      "type": "file_exists",
+      "path": "src/adapters/instagram.adapter.ts"
+    },
+    {
+      "id": "check-core-registry",
+      "description": "El registro dinámico de adaptadores debe existir en src/core/",
+      "type": "file_exists",
+      "path": "src/core/registry.ts"
+    },
+    {
+      "id": "check-live-demo-data",
+      "description": "El artefacto exportado del Reel de Instagram debe existir en data/",
+      "type": "file_exists",
+      "path": "data/demo_instagram_reel.json"
+    },
+    {
+      "id": "check-typecheck",
+      "description": "La verificación estricta de tipos de TypeScript debe pasar sin errores",
+      "type": "command",
+      "command": "npm run typecheck"
+    },
+    {
+      "id": "check-unit-tests",
+      "description": "La suite de pruebas unitarias y de integración debe pasar al 100%",
+      "type": "command",
+      "command": "npm test"
+    }
+  ]
+}

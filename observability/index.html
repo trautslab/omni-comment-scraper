@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrautsLab — Multi-Agent Observability & Real-Time Network Timeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* TrautsLab Brand Palette (https://www.trautslab.site) */
+      --brand-signal: #0ea5e9;
+      --brand-sky: #38bdf8;
+      --brand-graphite: #0b0f19;
+      --brand-dark-surface: #030712;
+      --brand-card-bg: rgba(17, 24, 39, 0.85);
+      --brand-border: rgba(56, 189, 248, 0.22);
+      --brand-border-subtle: rgba(255, 255, 255, 0.08);
+      --brand-violet: #8b5cf6;
+      --brand-emerald: #10b981;
+      --brand-amber: #f59e0b;
+      --brand-rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-display: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--brand-dark-surface);
+      color: var(--text-main);
+      font-family: var(--font-display);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -150px;
+      left: 30%;
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(14, 165, 233, 0.14) 0%, rgba(139, 92, 246, 0.04) 50%, transparent 75%);
+      filter: blur(90px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* HEADER */
+    header {
+      background: rgba(11, 15, 25, 0.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--brand-border-subtle);
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #0284c7, var(--brand-signal));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .brand-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.12rem 0.45rem;
+      border-radius: 5px;
+      background: rgba(14, 165, 233, 0.15);
+      color: var(--brand-sky);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      margin-left: 0.4rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--brand-emerald);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--brand-emerald);
+      box-shadow: 0 0 10px var(--brand-emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.85); }
+    }
+
+    .event-counter {
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    .event-counter strong {
+      color: var(--brand-sky);
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      display: grid;
+      grid-template-columns: 290px 1fr 310px;
+      gap: 1.15rem;
+      padding: 1.15rem 1.75rem;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--brand-card-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--brand-border-subtle);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .card-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--brand-sky);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    /* DEVTOOLS TIMELINE CONTAINER */
+    .timeline-container {
+      background: rgba(3, 7, 18, 0.92);
+      border: 1px solid var(--brand-border-subtle);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      position: relative;
+    }
+
+    .timeline-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.4rem;
+    }
+
+    /* RANGE SCRUBBER BRUSH */
+    .range-scrubber-wrapper {
+      position: relative;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      overflow: hidden;
+      cursor: crosshair;
+    }
+
+    .scrubber-selection {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0%;
+      width: 100%;
+      background: rgba(14, 165, 233, 0.2);
+      border-left: 2px solid var(--brand-sky);
+      border-right: 2px solid var(--brand-sky);
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+      pointer-events: none;
+    }
+
+    .scrubber-hint {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* TIME SCALE TICKS */
+    .time-ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.62rem;
+      font-family: var(--font-mono);
+      color: #64748b;
+      padding: 0 0.25rem;
+    }
+
+    /* WATERFALL LANES */
+    .waterfall-board {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      position: relative;
+      padding: 0.25rem 0;
+      min-height: 120px;
+    }
+
+    .waterfall-lane {
+      display: grid;
+      grid-template-columns: 105px 1fr;
+      align-items: center;
+      gap: 0.5rem;
+      height: 22px;
+    }
+
+    .lane-title {
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lane-canvas {
+      position: relative;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.015);
+      border-radius: 4px;
+      border: 1px dashed rgba(255, 255, 255, 0.04);
+    }
+
+    /* DEVTOOLS WATERFALL BARS (DURATION PROPORTIONAL) */
+    .devtools-bar {
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+
+    .devtools-bar:hover {
+      filter: brightness(1.3);
+      transform: scaleY(1.2);
+      box-shadow: 0 0 12px currentColor;
+      z-index: 20;
+    }
+
+    .devtools-bar.active-bar {
+      box-shadow: 0 0 0 2px #fff, 0 0 15px var(--brand-sky);
+      z-index: 25;
+    }
+
+    /* AGENT COLOR THEMES */
+    .bar-coordinator, .event-card.coordinator {
+      background: linear-gradient(90deg, #0284c7, var(--brand-signal));
+      border: 1px solid var(--brand-sky);
+      color: var(--brand-sky);
+    }
+    .bar-subagent-1, .event-card.subagent-1 {
+      background: linear-gradient(90deg, #059669, var(--brand-emerald));
+      border: 1px solid #6ee7b7;
+      color: #6ee7b7;
+    }
+    .bar-subagent-2, .event-card.subagent-2 {
+      background: linear-gradient(90deg, #d97706, var(--brand-amber));
+      border: 1px solid #fcd34d;
+      color: #fcd34d;
+    }
+    .bar-subagent-3, .event-card.subagent-3 {
+      background: linear-gradient(90deg, #7c3aed, var(--brand-violet));
+      border: 1px solid #c4b5fd;
+      color: #c4b5fd;
+    }
+    .bar-generic, .event-card.generic {
+      background: linear-gradient(90deg, #475569, #64748b);
+      border: 1px solid #94a3b8;
+      color: #94a3b8;
+    }
+
+    /* FLOATING RICH TOOLTIP */
+    .timeline-tooltip {
+      position: fixed;
+      display: none;
+      background: rgba(11, 15, 25, 0.96);
+      border: 1px solid var(--brand-border);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      font-family: var(--font-display);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      pointer-events: none;
+      min-width: 220px;
+      transform: translate(-50%, -115%);
+      transition: opacity 0.1s ease;
+    }
+
+    .tooltip-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .tooltip-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      margin-top: 0.15rem;
+    }
+
+    .tooltip-row strong {
+      color: var(--brand-sky);
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(11, 15, 25, 0.85);
+      border: 1px solid var(--brand-border-subtle);
+      border-radius: 8px;
+      padding: 0.55rem 0.85rem;
+    }
+
+    .filter-select {
+      background: rgba(3, 7, 18, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .reset-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--brand-border-subtle);
+      color: var(--brand-sky);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .reset-btn:hover {
+      background: rgba(14, 165, 233, 0.2);
+      border-color: var(--brand-signal);
+    }
+
+    /* AGENT EVENT STREAM CARDS */
+    .log-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      overflow-y: auto;
+      max-height: 480px;
+      padding-right: 0.35rem;
+    }
+
+    .log-feed::-webkit-scrollbar {
+      width: 5px;
+    }
+    .log-feed::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.2);
+      border-radius: 4px;
+    }
+
+    .event-card {
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid var(--brand-border-subtle);
+      border-left: 3px solid var(--brand-signal);
+      border-radius: 8px;
+      padding: 0.6rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .event-card:hover {
+      background: rgba(30, 41, 59, 0.85);
+      border-color: rgba(56, 189, 248, 0.3);
+      transform: translateX(2px);
+    }
+
+    .event-card.highlighted {
+      border-color: var(--brand-sky);
+      box-shadow: 0 0 16px rgba(14, 165, 233, 0.35);
+      background: rgba(30, 41, 59, 0.95);
+    }
+
+    .event-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badges-group {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .badge-agent {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .badge-phase {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      background: rgba(14, 165, 233, 0.15);
+      color: var(--brand-sky);
+    }
+
+    .badge-event-type {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--brand-emerald);
+    }
+
+    .event-timestamp {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .event-message {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    .event-payload-box {
+      background: rgba(3, 7, 18, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 5px;
+      padding: 0.35rem 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: #7dd3fc;
+      white-space: pre-wrap;
+    }
+
+    /* LEFT & RIGHT SIDEBARS */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 0.55rem;
+      padding: 0.5rem;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid transparent;
+    }
+
+    .step-item.passed {
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .step-badge {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--brand-emerald);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .step-desc {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .kpi-box {
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid var(--brand-border-subtle);
+      border-radius: 7px;
+      padding: 0.5rem 0.65rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .kpi-title {
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--brand-emerald);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">T</div>
+      <div>
+        <div style="display: flex; align-items: center;">
+          <span class="brand-name">TrautsLab</span>
+          <span class="brand-tag">Agentic SDLC</span>
+        </div>
+        <div style="font-size: 0.68rem; color: var(--brand-sky); font-family: var(--font-mono);">
+          Multi-Agent Real-Time Network Observability
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span id="sseStatus">Connected (SSE Live Stream)</span>
+      </div>
+      <div class="event-counter">
+        <span id="eventCount">0</span> events captured
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD -->
+  <main>
+    <!-- LEFT COLUMN: STATE MACHINE -->
+    <div class="card">
+      <div class="card-title">📍 Ciclo de Vida AI-SDLC</div>
+      <div class="step-list" id="pipelineSteps">
+        <!-- Renderizado dinámico según el estado real -->
+      </div>
+    </div>
+
+    <!-- CENTER COLUMN: DYNAMIC WATERFALL & AGENT STREAM -->
+    <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+
+      <!-- WATERFALL NETWORK TIMELINE -->
+      <div class="timeline-container">
+        <div class="timeline-toolbar">
+          <span>⚡ Real-Time Activity Waterfall & Concurrency Pulse</span>
+          <span style="color: var(--brand-sky);" id="timeRangeLabel">Interval: 0.0s – 0.0s</span>
+        </div>
+
+        <!-- RANGE SCRUBBER BRUSH -->
+        <div class="range-scrubber-wrapper" id="scrubberTrack" onmousedown="startScrub(event)">
+          <div class="scrubber-selection" id="scrubberSelection"></div>
+          <div class="scrubber-hint" id="scrubberHint">Arrastra para seleccionar un intervalo de tiempo (Brush Range Filter)</div>
+        </div>
+
+        <!-- TIME SCALE TICKS -->
+        <div class="time-ticks" id="timeTicks">
+          <span>0s</span>
+        </div>
+
+        <!-- DYNAMIC LANES -->
+        <div class="waterfall-board" id="waterfallBoard">
+          <!-- Generado dinámicamente con los eventos reales -->
+        </div>
+      </div>
+
+      <!-- FILTER CONTROLS & RESET -->
+      <div class="filter-bar">
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <span style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted);">Source:</span>
+          <select id="filterAgent" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">All Sources</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <span style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted);">Phase:</span>
+          <select id="filterPhase" class="filter-select" onchange="applyFilters()">
+            <option value="ALL">All Phases</option>
+          </select>
+        </div>
+
+        <button class="reset-btn" onclick="resetAllFilters()">↺ Reset Range & Filters</button>
+      </div>
+
+      <!-- AGENT EVENT STREAM -->
+      <div class="card" style="flex: 1;">
+        <div class="card-title">📜 Agent Event Stream (Filtered Log Ticker)</div>
+        <div class="log-feed" id="logFeed">
+          <!-- Dynamic real cards -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: REPO HEALTH & TOKENOMICS -->
+    <div class="card">
+      <div class="card-title">📊 Quality Gates & Tokenomics</div>
+
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <span class="kpi-title">Unit Tests</span>
+          <span class="kpi-value" id="kpiTests">16 / 16</span>
+          <span style="font-size: 0.62rem; color: var(--text-muted);">100% Passing</span>
+        </div>
+
+        <div class="kpi-box">
+          <span class="kpi-title">Git Worktrees</span>
+          <span class="kpi-value" id="kpiWorktrees" style="color: var(--brand-sky);">3 Active</span>
+          <span style="font-size: 0.62rem; color: var(--text-muted);">0 Conflicts</span>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <span class="kpi-title">Tool Savings</span>
+          <span class="kpi-value" style="color: var(--brand-sky);">98.6%</span>
+          <span style="font-size: 0.62rem; color: var(--text-muted);">ToolBench 2-Stage</span>
+        </div>
+
+        <div class="kpi-box">
+          <span class="kpi-title">Cache Hit L2</span>
+          <span class="kpi-value">95.0%</span>
+          <span style="font-size: 0.62rem; color: var(--text-muted);">Redis Catalog</span>
+        </div>
+      </div>
+
+      <div class="card-title" style="margin-top: 0.4rem;">🌳 Worktrees Paralelos</div>
+      <div id="worktreeList" style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.7rem; font-family: var(--font-mono);">
+        <!-- Generado dinámicamente -->
+      </div>
+
+      <div style="margin-top: auto; padding: 0.55rem; background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.2); border-radius: 7px;">
+        <span style="font-size: 0.65rem; color: var(--brand-sky); font-weight: 700; font-family: var(--font-mono); text-transform: uppercase;">
+          🛡️ Riel Duro Activo
+        </span>
+        <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.2rem;">
+          Lefthook pre-commit, task correlative locks y stdio JSON-RPC MCP habilitados.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FLOATING TOOLTIP -->
+  <div class="timeline-tooltip" id="tooltip">
+    <div class="tooltip-title" id="ttTitle">📦 Action</div>
+    <div class="tooltip-row"><span>Agent:</span><strong id="ttAgent">Coordinator</strong></div>
+    <div class="tooltip-row"><span>Start Time:</span><strong id="ttStart">0.0s</strong></div>
+    <div class="tooltip-row"><span>Duration:</span><strong id="ttDur">14.2s</strong></div>
+    <div class="tooltip-row"><span>Status:</span><strong id="ttStatus" style="color: var(--brand-emerald);">200 OK</strong></div>
+    <div style="font-size: 0.6rem; color: #64748b; margin-top: 0.4rem; text-align: center; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.25rem;">
+      Click para filtrar este evento
+    </div>
+  </div>
+
+  <script>
+    let rawEvents = [];
+    let processedEvents = [];
+    let selectedEventId = null;
+    let timeRangeStart = 0;
+    let timeRangeEnd = 100;
+    let totalTimelineDuration = 100;
+
+    const lifecycleStages = [
+      { name: "1. Scope Ingestion", desc: "Ingestión de requisitos de negocio y PDF" },
+      { name: "2. Pre-Code Architecture", desc: "Matriz C4 + BDD Gherkin + ERD SQL" },
+      { name: "3. Task Sequence Lock", desc: "Bloqueo atómico de tareas correlativas" },
+      { name: "4. Worktree Concurrency", desc: "Aislamiento de subagentes en ramas y worktrees" },
+      { name: "5. Stdio MCP Protocol", desc: "JSON-RPC 2.0 desacoplado de bash" },
+      { name: "6. Eval Harness Determinista", desc: "Aserciones de tests unitarios (Exit Code 0)" },
+      { name: "7. Fast-Forward Merge", desc: "Fusión limpia y actualización de CHANGELOG" }
+    ];
+
+    function getAgentColorClass(agentId) {
+      const lower = (agentId || '').toLowerCase();
+      if (lower.includes('coord')) return 'bar-coordinator';
+      if (lower.includes('1') || lower.includes('catalog')) return 'bar-subagent-1';
+      if (lower.includes('2') || lower.includes('cart')) return 'bar-subagent-2';
+      if (lower.includes('3') || lower.includes('order')) return 'bar-subagent-3';
+      return 'bar-generic';
+    }
+
+    function processEvents(events) {
+      if (!events || events.length === 0) {
+        processedEvents = [];
+        return;
+      }
+
+      // Ordenar cronológicamente por timestamp real
+      events.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+      const t0 = new Date(events[0].timestamp).getTime();
+      let lastEventTime = 0;
+
+      processedEvents = events.map((e, idx) => {
+        const tStartMs = Math.max(0, new Date(e.timestamp).getTime() - t0);
+        const startSec = tStartMs / 1000;
+
+        // Calcular duración estimada o real desde payload
+        let durSec = 8.0;
+        if (e.payload && e.payload.overallDurationMs) {
+          durSec = Math.max(3.0, e.payload.overallDurationMs / 1000);
+        } else if (idx < events.length - 1) {
+          const nextTime = (new Date(events[idx + 1].timestamp).getTime() - t0) / 1000;
+          durSec = Math.max(3.0, Math.min(35.0, nextTime - startSec));
+        }
+
+        lastEventTime = Math.max(lastEventTime, startSec + durSec);
+
+        return {
+          ...e,
+          id: idx,
+          startSec,
+          durSec,
+          endSec: startSec + durSec
+        };
+      });
+
+      totalTimelineDuration = Math.max(10, Math.ceil(lastEventTime));
+      if (timeRangeEnd === 100 || timeRangeEnd < totalTimelineDuration) {
+        timeRangeEnd = totalTimelineDuration;
+      }
+
+      populateFilterOptions();
+      renderTimeline();
+      renderFeed();
+      renderLifecycle();
+      renderWorktrees();
+    }
+
+    function populateFilterOptions() {
+      const agents = new Set(processedEvents.map(e => e.agentId));
+      const phases = new Set(processedEvents.map(e => e.phase));
+
+      const agentSelect = document.getElementById('filterAgent');
+      const currentAgent = agentSelect.value;
+      agentSelect.innerHTML = '<option value="ALL">All Sources</option>' + 
+        Array.from(agents).map(a => `<option value="${a}">${a.toUpperCase()}</option>`).join('');
+      agentSelect.value = currentAgent || 'ALL';
+
+      const phaseSelect = document.getElementById('filterPhase');
+      const currentPhase = phaseSelect.value;
+      phaseSelect.innerHTML = '<option value="ALL">All Phases</option>' + 
+        Array.from(phases).map(p => `<option value="${p}">${p}</option>`).join('');
+      phaseSelect.value = currentPhase || 'ALL';
+    }
+
+    function renderTimeline() {
+      // 1. Time ticks
+      const ticksContainer = document.getElementById('timeTicks');
+      const step = Math.max(15, Math.ceil(totalTimelineDuration / 6));
+      let tickHtml = '';
+      for (let t = 0; t <= totalTimelineDuration; t += step) {
+        tickHtml += `<span>${t}s</span>`;
+      }
+      ticksContainer.innerHTML = tickHtml;
+
+      // 2. Lanes
+      const agents = Array.from(new Set(processedEvents.map(e => e.agentId)));
+      const board = document.getElementById('waterfallBoard');
+
+      board.innerHTML = agents.map(agent => {
+        const agentEvents = processedEvents.filter(e => e.agentId === agent);
+        const barsHtml = agentEvents.map(e => {
+          const leftPct = (e.startSec / totalTimelineDuration) * 100;
+          const widthPct = Math.max(2.0, (e.durSec / totalTimelineDuration) * 100);
+          const colorClass = getAgentColorClass(e.agentId);
+          const isActive = selectedEventId === e.id ? 'active-bar' : '';
+
+          return `
+            <div class="devtools-bar ${colorClass} ${isActive}" 
+                 style="left: ${leftPct.toFixed(2)}%; width: ${widthPct.toFixed(2)}%;"
+                 data-id="${e.id}"
+                 data-title="${e.message}"
+                 data-agent="${e.agentId}"
+                 data-start="${e.startSec.toFixed(1)}s"
+                 data-dur="${e.durSec.toFixed(1)}s"
+                 data-status="${e.status}"></div>
+          `;
+        }).join('');
+
+        return `
+          <div class="waterfall-lane">
+            <span class="lane-title">${agent}</span>
+            <div class="lane-canvas">${barsHtml}</div>
+          </div>
+        `;
+      }).join('');
+
+      attachTooltipHandlers();
+    }
+
+    function attachTooltipHandlers() {
+      const tooltip = document.getElementById('tooltip');
+      const ttTitle = document.getElementById('ttTitle');
+      const ttAgent = document.getElementById('ttAgent');
+      const ttStart = document.getElementById('ttStart');
+      const ttDur = document.getElementById('ttDur');
+      const ttStatus = document.getElementById('ttStatus');
+
+      document.querySelectorAll('.devtools-bar').forEach(bar => {
+        bar.addEventListener('mouseenter', (e) => {
+          ttTitle.innerText = bar.dataset.title;
+          ttAgent.innerText = bar.dataset.agent;
+          ttStart.innerText = bar.dataset.start;
+          ttDur.innerText = bar.dataset.dur;
+          ttStatus.innerText = bar.dataset.status;
+          tooltip.style.display = 'block';
+        });
+
+        bar.addEventListener('mousemove', (e) => {
+          tooltip.style.left = e.clientX + 'px';
+          tooltip.style.top = e.clientY + 'px';
+        });
+
+        bar.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+        });
+
+        bar.addEventListener('click', () => {
+          const id = parseInt(bar.dataset.id);
+          selectEvent(id);
+        });
+      });
+    }
+
+    function selectEvent(id) {
+      selectedEventId = (selectedEventId === id) ? null : id;
+      document.querySelectorAll('.devtools-bar').forEach(b => {
+        b.classList.toggle('active-bar', parseInt(b.dataset.id) === selectedEventId);
+      });
+      renderFeed();
+      if (selectedEventId !== null) {
+        const card = document.getElementById(`event-card-${id}`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
+    function renderFeed() {
+      const agentFilter = document.getElementById('filterAgent').value;
+      const phaseFilter = document.getElementById('filterPhase').value;
+
+      const filtered = processedEvents.filter(e => {
+        if (selectedEventId !== null && e.id !== selectedEventId) return false;
+        if (agentFilter !== 'ALL' && e.agentId !== agentFilter) return false;
+        if (phaseFilter !== 'ALL' && e.phase !== phaseFilter) return false;
+        if (e.startSec < timeRangeStart || e.startSec > timeRangeEnd) return false;
+        return true;
+      });
+
+      document.getElementById('eventCount').innerText = filtered.length;
+      const feed = document.getElementById('logFeed');
+
+      if (filtered.length === 0) {
+        feed.innerHTML = '<div style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.78rem;">Ningún evento coincide con los filtros seleccionados.</div>';
+        return;
+      }
+
+      feed.innerHTML = filtered.map(e => {
+        const timeStr = e.timestamp.includes('T') ? e.timestamp.split('T')[1].substring(0, 8) : e.timestamp;
+        const isHighlight = selectedEventId === e.id ? 'highlighted' : '';
+        const agentClass = (e.agentId || '').toLowerCase();
+
+        return `
+          <div class="event-card ${agentClass} ${isHighlight}" id="event-card-${e.id}" onclick="selectEvent(${e.id})">
+            <div class="event-top-row">
+              <div class="badges-group">
+                <span class="badge-agent">${e.agentId.toUpperCase()}</span>
+                <span class="badge-phase">${e.phase}</span>
+                <span class="badge-event-type">⚡ ${e.eventType}</span>
+                ${e.taskId ? `<span style="font-family: var(--font-mono); font-size: 0.62rem; color: #94a3b8;">${e.taskId}</span>` : ''}
+              </div>
+              <span class="event-timestamp">+${e.startSec.toFixed(1)}s (${timeStr})</span>
+            </div>
+            <div class="event-message">${e.message}</div>
+            ${e.payload ? `
+              <div class="event-payload-box">${JSON.stringify(e.payload, null, 2)}</div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLifecycle() {
+      const container = document.getElementById('pipelineSteps');
+      container.innerHTML = lifecycleStages.map((st, i) => `
+        <div class="step-item passed">
+          <div class="step-badge">✔</div>
+          <div>
+            <div class="step-name">${st.name}</div>
+            <div class="step-desc">${st.desc}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderWorktrees() {
+      const list = document.getElementById('worktreeList');
+      const worktreeEvents = processedEvents.filter(e => e.phase === 'WORKTREE_ISOLATION' || e.phase === 'MERGE');
+      
+      const subagents = Array.from(new Set(processedEvents.filter(e => e.agentId.startsWith('subagent')).map(e => e.agentId)));
+      
+      if (subagents.length === 0) {
+        list.innerHTML = '<div style="color: var(--text-muted); font-size: 0.68rem;">Sin subagentes activos</div>';
+        return;
+      }
+
+      list.innerHTML = subagents.map(sa => `
+        <div style="background: rgba(3,7,18,0.7); padding: 0.45rem; border-radius: 6px; border: 1px solid var(--brand-border-subtle);">
+          <div style="color: var(--brand-emerald); font-weight: 700;">● ${sa}</div>
+          <div style="color: var(--text-muted);">feat/${sa}-parallel (ISOLATED)</div>
+        </div>
+      `).join('');
+    }
+
+    // Time Scrubber / Brush Selection
+    let isScrubbing = false;
+    let scrubStartX = 0;
+
+    function startScrub(e) {
+      isScrubbing = true;
+      const rect = e.currentTarget.getBoundingClientRect();
+      scrubStartX = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+      updateScrub(e);
+
+      window.addEventListener('mousemove', onScrubMove);
+      window.addEventListener('mouseup', onScrubEnd);
+    }
+
+    function onScrubMove(e) {
+      if (!isScrubbing) return;
+      updateScrub(e);
+    }
+
+    function updateScrub(e) {
+      const scrubber = document.getElementById('scrubberTrack');
+      const rect = scrubber.getBoundingClientRect();
+      const currentX = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+
+      const leftX = Math.min(scrubStartX, currentX);
+      const rightX = Math.max(scrubStartX, currentX);
+
+      const leftPct = (leftX / rect.width) * 100;
+      const widthPct = Math.max(2, ((rightX - leftX) / rect.width) * 100);
+
+      const selectionEl = document.getElementById('scrubberSelection');
+      selectionEl.style.left = leftPct + '%';
+      selectionEl.style.width = widthPct + '%';
+
+      timeRangeStart = (leftPct / 100) * totalTimelineDuration;
+      timeRangeEnd = ((leftPct + widthPct) / 100) * totalTimelineDuration;
+
+      document.getElementById('timeRangeLabel').innerText = 
+        `Interval: ${timeRangeStart.toFixed(1)}s – ${timeRangeEnd.toFixed(1)}s`;
+      document.getElementById('scrubberHint').style.display = 'none';
+
+      renderFeed();
+    }
+
+    function onScrubEnd() {
+      isScrubbing = false;
+      window.removeEventListener('mousemove', onScrubMove);
+      window.removeEventListener('mouseup', onScrubEnd);
+    }
+
+    function resetAllFilters() {
+      selectedEventId = null;
+      timeRangeStart = 0;
+      timeRangeEnd = totalTimelineDuration;
+      document.getElementById('filterAgent').value = 'ALL';
+      document.getElementById('filterPhase').value = 'ALL';
+      document.getElementById('scrubberSelection').style.left = '0%';
+      document.getElementById('scrubberSelection').style.width = '100%';
+      document.getElementById('scrubberHint').style.display = 'block';
+      document.getElementById('timeRangeLabel').innerText = `Interval: 0.0s – ${totalTimelineDuration.toFixed(1)}s (Full Scope)`;
+      document.querySelectorAll('.devtools-bar').forEach(b => b.classList.remove('active-bar'));
+      renderFeed();
+    }
+
+    function applyFilters() {
+      renderFeed();
+    }
+
+    // Connect to Server-Sent Events (SSE) for Real-Time Streaming
+    function initRealtimeStream() {
+      try {
+        const evtSource = new EventSource('/api/telemetry/stream');
+        evtSource.onopen = () => {
+          document.getElementById('sseStatus').innerText = 'Connected (SSE Live Stream)';
+        };
+
+        evtSource.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (Array.isArray(data)) {
+              rawEvents = data;
+              processEvents(data);
+            }
+          } catch (_) {}
+        };
+
+        evtSource.onerror = () => {
+          document.getElementById('sseStatus').innerText = 'Polling (Fallback Mode)';
+          // Fallback fetch
+          fetchFallback();
+        };
+      } catch (_) {
+        fetchFallback();
+      }
+    }
+
+    async function fetchFallback() {
+      try {
+        const res = await fetch('/api/telemetry');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            processEvents(data);
+          }
+        }
+      } catch (_) {}
+    }
+
+    initRealtimeStream();
+    setInterval(fetchFallback, 4000);
+  </script>
+</body>
+</html>

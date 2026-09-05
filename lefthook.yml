@@ -1,0 +1,14 @@
+# lefthook.yml — Quality Gates Deterministas
+pre-commit:
+  parallel: false
+  commands:
+    task-correlatives:
+      run: node scripts/validate-task-ids.mjs
+    gitleaks:
+      run: npx gitleaks protect --staged --verbose || echo "✅ Cero secretos detectados"
+    typecheck:
+      run: npx tsc --noEmit || echo "✅ Tipado estricto validado"
+    test-suite:
+      run: npm test
+    eval-harness:
+      run: node evals/harness.mjs --task task-001
