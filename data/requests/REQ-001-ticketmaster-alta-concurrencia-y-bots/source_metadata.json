@@ -1,0 +1,25 @@
+{
+  "requestId": "REQ-001",
+  "topic": "Arquitectura de Mitigación de Bots y Alta Concurrencia (Ticketmaster 2022)",
+  "sourceType": "INSTAGRAM_REEL",
+  "sourceUrl": "https://www.instagram.com/reel/DVw27-9jGJe/",
+  "author": {
+    "username": "arturo_velazquez_java",
+    "displayName": "Arturo Velazquez",
+    "platform": "INSTAGRAM"
+  },
+  "engagement": {
+    "likes": 47000,
+    "commentsCount": 501,
+    "views": "1.2M+"
+  },
+  "ingestedAt": "2026-09-05T20:36:00.000Z",
+  "historicalIncident": "Ticketmaster infrastructure breakdown during The Eras Tour presale in November 2022 (14 million concurrent buyer requests)",
+  "coreTechnicalPillars": [
+    "API Gateway Rate Limiting (HTTP 429)",
+    "Behavioral Anti-Bot Scoring (Google reCAPTCHA v3 / Cloudflare Turnstile)",
+    "Virtual Waiting Rooms with Redis Sorted Sets (ZSET) and TTL Leases",
+    "Device Hardware & Browser Entropy Fingerprinting",
+    "Out-of-Band Human Verification via SMS OTP vs FIDO2 Passkeys"
+  ]
+}

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informe Ejecutivo: La Batalla Contra los Bots y el Desafío de los 14 Millones de Usuarios</title>
+  <meta name="description" content="Dictamen ejecutivo y funcional para Comités de Dirección sobre arquitectura de alta concurrencia, salas de espera virtuales y mitigación de bots a hiperescala.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --color-bg: #0b0f19;
+      --color-surface: #131b2e;
+      --color-surface-elevated: #1a253e;
+      --color-surface-border: rgba(255, 255, 255, 0.08);
+      --color-primary: #3b82f6;
+      --color-primary-hover: #2563eb;
+      --color-accent: #06b6d4;
+      --color-danger: #ef4444;
+      --color-warning: #f59e0b;
+      --color-success: #10b981;
+      --color-text-main: #f8fafc;
+      --color-text-muted: #94a3b8;
+      --color-text-dim: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      line-height: 1.65;
+      font-size: 16px;
+      padding-bottom: 5rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Floating Action Bar */
+    .top-action-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(11, 15, 25, 0.85);
+      border-bottom: 1px solid var(--color-surface-border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    .brand-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      background: rgba(6, 182, 212, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+    }
+
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #ffffff;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-print:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.5);
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 2.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    /* Hero Section */
+    .header-hero {
+      background: linear-gradient(180deg, var(--color-surface) 0%, rgba(19, 27, 46, 0.5) 100%);
+      border: 1px solid var(--color-surface-border);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2.5rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .header-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+    }
+
+    .header-tag {
+      color: var(--color-accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      color: #ffffff;
+    }
+
+    .lead {
+      font-size: 1.15rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      border-top: 1px solid var(--color-surface-border);
+      padding-top: 1.5rem;
+    }
+
+    .meta-item-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-dim);
+      margin-bottom: 0.25rem;
+    }
+
+    .meta-item-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+    }
+
+    /* Metric Cards Grid */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .metric-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-surface-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(6, 182, 212, 0.4);
+    }
+
+    .metric-number {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      color: #38bdf8;
+    }
+
+    .metric-number.danger { color: #f87171; }
+    .metric-number.warning { color: #fbbf24; }
+    .metric-number.success { color: #34d399; }
+
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      line-height: 1.35;
+    }
+
+    /* Section Styling */
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: #ffffff;
+      border-bottom: 1px solid var(--color-surface-border);
+      padding-bottom: 0.75rem;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+      color: #cbd5e1;
+    }
+
+    /* Callout & Analogy Cards */
+    .analogy-card {
+      background: rgba(30, 41, 59, 0.7);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 1.5rem;
+      margin: 1.75rem 0;
+    }
+
+    .analogy-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .analogy-text {
+      font-style: italic;
+      color: #e2e8f0;
+      margin-bottom: 0;
+    }
+
+    /* Table Styling */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0 2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-surface-border);
+      box-shadow: var(--shadow-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--color-surface);
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    th {
+      background: var(--color-surface-elevated);
+      color: #f1f5f9;
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-surface-border);
+      letter-spacing: 0.02em;
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-surface-border);
+      color: #cbd5e1;
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Roadmap Timeline */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+    }
+
+    .phase-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-surface-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .phase-card.critical { border-top: 4px solid var(--color-danger); }
+    .phase-card.medium { border-top: 4px solid var(--color-warning); }
+    .phase-card.strategic { border-top: 4px solid var(--color-success); }
+
+    .phase-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .phase-card.critical .phase-tag { color: #f87171; }
+    .phase-card.medium .phase-tag { color: #fbbf24; }
+    .phase-card.strategic .phase-tag { color: #34d399; }
+
+    .phase-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.85rem;
+    }
+
+    .phase-list {
+      list-style: none;
+      font-size: 0.88rem;
+      color: #94a3b8;
+    }
+
+    .phase-list li {
+      margin-bottom: 0.65rem;
+      position: relative;
+      padding-left: 1.25rem;
+      line-height: 1.45;
+    }
+
+    .phase-list li::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+      font-size: 0.8rem;
+    }
+
+    /* Takeaway Box */
+    .takeaway-box {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-top: 2.5rem;
+      text-align: left;
+    }
+
+    .takeaway-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 0.75rem;
+    }
+
+    .takeaway-quote {
+      font-size: 1.05rem;
+      color: #f1f5f9;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    /* Print Stylesheet */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #1a202c !important;
+        font-size: 11pt !important;
+        line-height: 1.45 !important;
+        padding-bottom: 0 !important;
+      }
+
+      .top-action-bar {
+        display: none !important;
+      }
+
+      .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .header-hero {
+        background: none !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        padding: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+        page-break-after: avoid;
+      }
+
+      h1 {
+        color: #0f172a !important;
+        font-size: 20pt !important;
+      }
+
+      h2 {
+        color: #0f172a !important;
+        font-size: 14pt !important;
+        border-bottom: 1px solid #94a3b8 !important;
+        page-break-after: avoid;
+      }
+
+      p, li, td {
+        color: #334155 !important;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 0.5rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+
+      .metric-card {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 0.75rem !important;
+        box-shadow: none !important;
+      }
+
+      .metric-number {
+        font-size: 16pt !important;
+        color: #0369a1 !important;
+      }
+
+      .metric-label {
+        font-size: 8pt !important;
+        color: #475569 !important;
+      }
+
+      .analogy-card {
+        background: #f1f5f9 !important;
+        border-left: 4px solid #0284c7 !important;
+        color: #1e293b !important;
+        padding: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-inside: avoid;
+      }
+
+      .analogy-text { color: #334155 !important; }
+
+      .table-container {
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        margin: 1rem 0 !important;
+        page-break-inside: avoid;
+      }
+
+      table { background: #ffffff !important; }
+
+      th {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+        border-bottom: 1px solid #94a3b8 !important;
+        padding: 0.5rem 0.75rem !important;
+      }
+
+      td {
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 0.5rem 0.75rem !important;
+      }
+
+      .roadmap-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.5rem !important;
+        page-break-inside: avoid;
+      }
+
+      .phase-card {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 0.75rem !important;
+      }
+
+      .phase-title {
+        color: #0f172a !important;
+        font-size: 10pt !important;
+      }
+
+      .phase-list {
+        color: #334155 !important;
+        font-size: 8.5pt !important;
+      }
+
+      .takeaway-box {
+        background: #f0fdf4 !important;
+        border: 1px solid #bbf7d0 !important;
+        padding: 1rem !important;
+        page-break-inside: avoid;
+      }
+
+      .takeaway-quote { color: #166534 !important; }
+    }
+
+    @media (max-width: 768px) {
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+      .roadmap-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 1.85rem; }
+      .header-hero { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Action Bar -->
+  <header class="top-action-bar">
+    <div class="brand-meta">
+      <span class="badge-status">● Reporte de Resiliencia</span>
+      <span class="brand-title">Arquitectura de Alta Concurrencia y Bots</span>
+    </div>
+    <button class="btn-print" onclick="window.print()" id="btn-print-pdf">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9V2h12v7"></path>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Exportar a PDF / Imprimir
+    </button>
+  </header>
+
+  <main class="container">
+
+    <!-- Header Hero -->
+    <div class="header-hero">
+      <span class="header-tag">Gobernanza Digital & Estrategia de Capacidad</span>
+      <h1>La Batalla Contra los Bots y el Desafío de los 14 Millones de Usuarios</h1>
+      <p class="lead">
+        Por qué los servidores de comercio electrónico colapsan en lanzamientos masivos, cómo los revendedores automatizados explotan la infraestructura tradicional y la estrategia directiva para garantizar 100% de disponibilidad sin sobrecostos en la nube.
+      </p>
+
+      <div class="meta-grid">
+        <div>
+          <div class="meta-item-label">Destinatarios</div>
+          <div class="meta-item-value">Consejos, CEO, CPO y Comités de Operaciones</div>
+        </div>
+        <div>
+          <div class="meta-item-label">Escala de Demanda</div>
+          <div class="meta-item-value" style="color: #38bdf8;">14M Peticiones Concurrentes</div>
+        </div>
+        <div>
+          <div class="meta-item-label">Estándares Aplicados</div>
+          <div class="meta-item-value">IETF RFC 6585, NIST SP 800-63B, FIDO2</div>
+        </div>
+        <div>
+          <div class="meta-item-label">Horizonte de Implementación</div>
+          <div class="meta-item-value" style="color: #34d399;">90 Días por Fases</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metric Cards -->
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="metric-number danger">14M</div>
+        <div class="metric-label">Peticiones concurrentes en el pico de demanda de 2022</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number warning">30s</div>
+        <div class="metric-label">Ventana de Rate Limiting por comprador individual</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number">10 min</div>
+        <div class="metric-label">Tiempo máximo garantizado para completar el checkout</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number success">99.9%</div>
+        <div class="metric-label">Disponibilidad transaccional con Sala de Espera Virtual</div>
+      </div>
+    </div>
+
+    <!-- Section 1 -->
+    <section>
+      <h2>1. El Hecho Central: El Error del Embudo Transaccional</h2>
+      <p>
+        Cuando millones de personas intentan comprar boletos al mismo tiempo para un evento de alta demanda (como la histórica preventa de Ticketmaster en noviembre de 2022), el sistema no falló por una mala programación de su catálogo. El fallo fue de <strong>arquitectura de flujo</strong>: permitir que 14 millones de compradores y bots llegaran al mismo tiempo a la caja registradora de la base de datos central.
+      </p>
+      <p>
+        Comprar más servidores no soluciona este problema; solo incrementa la factura en la nube mientras la base de datos se ahoga bloqueando filas de asientos. La verdadera solución consiste en <strong>detener la ola en el borde de la red y regular el paso mediante una Sala de Espera Digital</strong>.
+      </p>
+
+      <div class="analogy-card">
+        <div class="analogy-header">
+          ✈️ Analogía del Mundo Real: El Aeropuerto y el Embudo del Avión
+        </div>
+        <p class="analogy-text">
+          "Imagine un aeropuerto con un avión de 200 pasajeros. Si 14 millones de personas corren simultáneamente hacia la puerta de embarque, la multitud romperá los cristales y nadie subirá al avión. La solución de la aviación no es hacer la puerta del avión más grande; es construir <strong>salas de espera y filtros de seguridad progresivos</strong>. El pasajero espera cómodamente sentado en la terminal y solo pasa al avión en grupos de 10 personas a la vez. En el software moderno, esto es una <strong>Sala de Espera Virtual (Virtual Waiting Room)</strong>."
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 2 -->
+    <section>
+      <h2>2. Las Tres Grandes Brechas de Operación</h2>
+      <p>
+        Las auditorías técnicas demuestran que los atacantes no necesitaron hackear la empresa; simplemente aprovecharon tres deficiencias en las reglas del sistema:
+      </p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Falla Operativa</th>
+              <th>Qué Vivió el Usuario Común</th>
+              <th>Impacto en el Negocio</th>
+              <th>La Solución Estratégica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Acceso Directo al Cobro</strong></td>
+              <td>El usuario daba clic en 'Comprar' y la página se quedaba congelada con una pantalla blanca o error de servidor.</td>
+              <td>Pérdida de ventas legítimas y colapso de la base de datos transaccional.</td>
+              <td><strong>Sala de Espera Virtual en Memoria (Redis ZSET):</strong> El tráfico espera en la periferia de la nube y pasa en tandas fijas de 5,000 usuarios por segundo.</td>
+            </tr>
+            <tr>
+              <td><strong>Robots Revendedores sin Freno</strong></td>
+              <td>Los bots acaparaban miles de entradas en milisegundos, agotando los boletos antes de que un humano pudiera ingresar sus datos.</td>
+              <td>Reventa descontrolada en mercados negros a precios multiplicados por 10.</td>
+              <td><strong>Desafíos Criptográficos Invisibles (Turnstile):</strong> Retos matemáticos ligeros en el navegador que neutralizan el 99% de los bots sin molestar al usuario.</td>
+            </tr>
+            <tr>
+              <td><strong>Verificación Telefónica por SMS (OTP)</strong></td>
+              <td>Revendedores con granjas de números virtuales (VoIP) superaban fácilmente la confirmación por mensaje de texto.</td>
+              <td>Fracaso del límite de boletos por comprador (un revendedor compraba más de 1,000 entradas).</td>
+              <td><strong>Passkeys Biométricas (FIDO2 / WebAuthn):</strong> Registro enlazado a la huella digital o rostro del teléfono del usuario, limitando estrictamente a 1 dispositivo.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 3 -->
+    <section>
+      <h2>3. Impacto Integral en el Negocio</h2>
+      <p>
+        Un colapso tecnológico frente a millones de fanáticos no es un detalle operativo menor; se transforma en una crisis institucional:
+      </p>
+      <ul style="padding-left: 1.5rem; color: #cbd5e1; margin-bottom: 1.5rem; line-height: 1.8;">
+        <li><strong>Riesgo Político y Regulatorio:</strong> Investigaciones en el Senado, citatorios judiciales y escrutinio del Departamento de Justicia por monopolio.</li>
+        <li><strong>Erosión de la Marca y Boicot:</strong> Artistas internacionales exigiendo explicaciones y fanáticos impulsando campañas públicas en contra de la empresa.</li>
+        <li><strong>Sobrecosto Tecnológico Inútil:</strong> Facturas millonarias de infraestructura en la nube causadas por auto-escalado descontrolado que no resolvió el cuello de botella.</li>
+      </ul>
+    </section>
+
+    <!-- Section 4 -->
+    <section>
+      <h2>4. Hoja de Ruta Directiva para la Remediación (90 Días)</h2>
+      <p>
+        Para inmunizar a la plataforma ante futuros picos de alta demanda sin frenar la innovación, se establece el siguiente plan de 3 etapas:
+      </p>
+
+      <div class="roadmap-grid">
+        <div class="phase-card critical">
+          <span class="phase-tag">Fase 1 • Días 0 - 15</span>
+          <div class="phase-title">Contención en la Puerta</div>
+          <ul class="phase-list">
+            <li>Activar Sala de Espera Virtual en la nube (Cloudflare Waiting Room) ante eventos pico.</li>
+            <li>Configurar límites de tasa estrictos (Rate Limiting HTTP 429) por usuario.</li>
+            <li>Desplegar páginas de error estáticas para que la caída nunca muestre pantallas en blanco.</li>
+          </ul>
+        </div>
+
+        <div class="phase-card medium">
+          <span class="phase-tag">Fase 2 • Días 30 - 45</span>
+          <div class="phase-title">Orden y Control de Turnos</div>
+          <ul class="phase-list">
+            <li>Integrar dispensador de turnos en memoria rápida (Redis Sorted Sets) con tokens firmados.</li>
+            <li>Reemplazar CAPTCHAs invasivos por retos criptográficos invisibles (Turnstile / PoW).</li>
+            <li>Garantizar idempotencia para evitar cargos bancarios duplicados ante clics múltiples.</li>
+          </ul>
+        </div>
+
+        <div class="phase-card strategic">
+          <span class="phase-tag">Fase 3 • Día 90</span>
+          <div class="phase-title">Blindaje de Identidad</div>
+          <ul class="phase-list">
+            <li>Habilitar inicio de sesión biométrico con Passkeys (huella/rostro) para ventas exclusivas.</li>
+            <li>Implementar descarte en kernel (eBPF/XDP) para neutralizar millones de peticiones bot a nivel hardware.</li>
+            <li>Auditoría continua de resiliencia con pruebas de estrés simuladas de 15M de usuarios.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Takeaway Box -->
+    <div class="takeaway-box">
+      <div class="takeaway-title">💡 Dictamen Final para el Comité de Dirección</div>
+      <div class="takeaway-quote">
+        "El objetivo no es construir una autopista infinitamente ancha que cueste millones de dólares al año, sino <strong>construir un peaje inteligente y una sala de espera VIP bien organizada</strong>. Con una Sala de Espera Virtual, retos criptográficos invisibles y confirmación biométrica, la empresa garantiza que sus servidores no se caigan jamás y que el inventario termine en manos de fanáticos reales, no de revendedores automatizados."
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

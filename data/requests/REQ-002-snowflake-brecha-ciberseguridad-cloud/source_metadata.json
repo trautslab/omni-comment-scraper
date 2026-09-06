@@ -1,0 +1,19 @@
+{
+  "requestId": "REQ-002",
+  "topic": "Brecha de Ciberseguridad en Snowflake: Caso Ticketmaster y Santander",
+  "sourceType": "ARTICLE",
+  "sourceUrl": "https://es.wired.com/articulos/hackeo-a-ticketmaster-expone-vulnerabilidad-del-sector-empresarial-ante-posibles-ciberataques",
+  "author": "Matt Burgess / Andrei Osornio (WIRED)",
+  "publishedDate": "2024-06-03",
+  "ingestedAt": "2026-09-05T20:21:23.000Z",
+  "threatActor": "UNC5537 / ShinyHunters",
+  "affectedRecords": "560,000,000 (Ticketmaster) + 30,000,000 (Santander)",
+  "rootCause": "Credential theft via infostealers (Vidar, RedLine, Lumma) on unmanaged contractor BYOD endpoints + Absence of MFA and Network Policies on Snowflake accounts",
+  "verifiedSources": [
+    "Wired Magazine",
+    "Mandiant Threat Intelligence (Google Cloud)",
+    "Snowflake Security Advisory (Brad Jones, CISO)",
+    "CISA & Australian Cyber Security Centre (ACSC)",
+    "NIST SP 800-63B & NIST SP 800-207 Zero Trust"
+  ]
+}
