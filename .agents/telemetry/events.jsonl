@@ -5,3 +5,5 @@
 {"timestamp":"2026-09-05T22:53:35.945Z","agentId":"coordinator","taskId":"GENERAL","phase":"EXECUTION","eventType":"EVENT","status":"SUCCESS","message":"Iniciando demostración en vivo de scraping multiplataforma","payload":{}}
 {"timestamp":"2026-09-05T22:53:36.659Z","agentId":"coordinator","taskId":"GENERAL","phase":"EXECUTION","eventType":"EVENT","status":"SUCCESS","message":"Scraping de Instagram Reel completado exitosamente","payload":{}}
 {"timestamp":"2026-09-05T22:53:37.514Z","agentId":"coordinator","taskId":"GENERAL","phase":"EXECUTION","eventType":"EVENT","status":"SUCCESS","message":"Demostración completada satisfactoriamente","payload":{}}
+{"timestamp":"2026-09-06T00:44:08.753Z","agentId":"coordinator","taskId":"GENERAL","phase":"EXECUTION","eventType":"EVENT","status":"SUCCESS","message":"Demostración de Knowledge Lab y Minería completada con éxito","payload":{}}
+{"timestamp":"2026-09-06T00:47:32.206Z","agentId":"coordinator","taskId":"GENERAL","phase":"EXECUTION","eventType":"EVENT","status":"SUCCESS","message":"Demostración de Knowledge Lab y Minería completada con éxito","payload":{}}

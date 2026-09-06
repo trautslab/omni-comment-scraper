@@ -8,14 +8,22 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ## [Unreleased]
 
 ### Added
-- Scaffolding completo del proyecto bajo el estándar **AI-SDLC Framework** para la organización `trautslab`.
-- Arquitectura Hexagonal con puertos (`PlatformAdapter`, `CommentExporter`) y registro dinámico de adaptadores (`AdapterRegistry`).
-- Adaptador para **Instagram** (`InstagramAdapter`) con soporte de extracción SSR para Reels/Posts y GraphQL para hilos con sesión.
-- Adaptadores iniciales para **YouTube**, **TikTok**, **Telegram** y **Facebook**.
-- Módulo de normalización unificado (`CommentNormalizer`) con sanitización, extracción de hashtags, menciones, timestamps ISO 8601 y análisis de sentimiento.
-- Exportadores estructurados para formatos JSON (`JsonExporter`) y CSV tabular (`CsvExporter`).
-- Interfaz de línea de comandos (`src/cli/index.ts`) con soporte de flags `--url`, `--limit`, `--format`, `--output` y `--session`.
-- Demostración en vivo (`scripts/demo-live.ts`) probada con el Reel objetivo `https://www.instagram.com/reels/DVw27-9jGJe/`.
-- Harness de evaluación automatizada (`evals/harness.mjs --task task-001`) con 10 checks deterministas al 100%.
-- Suite de 18 pruebas unitarias y de integración (`npm test`) pasando al 100%.
-- Matriz completa de documentación C4, ADRs, Casos de Uso, Diagramas Mermaid y RFC en `docs/`.
+- **TASK-002: Bóveda Dinámica de Sesiones (`SessionVault`)**:
+  - Almacenamiento seguro local en `.sessions/vault.json` para Instagram, TikTok, Facebook y YouTube.
+  - Parseo automático de strings de cookies, verificación de salud en tiempo real contra APIs oficiales y lanzamiento de navegador interactivo.
+  - Integración transparente en `InstagramAdapter` para extracción profunda de comentarios sin intervención manual.
+- **TASK-002: Motor de Síntesis y Fact-Checking NotebookLM (`KnowledgeSynthesizer`)**:
+  - Auditoría técnica de afirmaciones de posts contra especificaciones IETF (RFC 6585), Cloudflare Waiting Room, Redis y NIST.
+  - Generación de propuestas de arquitectura SOTA (eBPF/XDP, Passkeys WebAuthn/FIDO2).
+  - Creación de paquetes de estudio `.md` con flashcards listos para Google NotebookLM.
+- **TASK-002: Minería de Comentarios Expertos e Inteligencia Comunitaria (`ExpertCommentMiner`)**:
+  - Filtro de ruido y scoring de profundidad técnica (0-100).
+  - Detección de herramientas citadas por la comunidad (Envoy, eBPF, Redis, FIDO2, Kafka) y casos límite de producción.
+  - Apéndice automático integrado en la fuente de estudio.
+- **TASK-002: Dashboard y Servidor Visual Renovado (`observability/index.html` & `scripts/serve-dashboard.ts`)**:
+  - 5 pestañas interactivas: Explorador & Scraping en Vivo, Session Vault, Knowledge Lab, Minería de Comentarios y Telemetría SSE.
+  - API REST local con endpoints para sesiones, scraping, síntesis y minería.
+- **TASK-001: Motor Central de Scraping Multiplataforma y Adaptadores**:
+  - Scaffolding completo AI-SDLC para la organización `trautslab`.
+  - Arquitectura Hexagonal con adaptadores para Instagram, YouTube, TikTok, Telegram y Facebook.
+  - Normalizador de comentarios, exportadores JSON/CSV, CLI, y suite de tests.

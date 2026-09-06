@@ -1,0 +1,54 @@
+{
+  "id": "task-002",
+  "name": "Verificación Integral de Session Vault, Knowledge Lab y Minería de Expertos",
+  "checks": [
+    {
+      "id": "check-session-vault-file",
+      "description": "El gestor de sesiones src/core/session-vault.ts debe existir",
+      "type": "file_exists",
+      "path": "src/core/session-vault.ts"
+    },
+    {
+      "id": "check-knowledge-synthesizer-file",
+      "description": "El generador NotebookLM src/core/knowledge-synthesizer.ts debe existir",
+      "type": "file_exists",
+      "path": "src/core/knowledge-synthesizer.ts"
+    },
+    {
+      "id": "check-expert-miner-file",
+      "description": "El extractor de comentarios expertos src/core/expert-comment-miner.ts debe existir",
+      "type": "file_exists",
+      "path": "src/core/expert-comment-miner.ts"
+    },
+    {
+      "id": "check-dashboard-server",
+      "description": "El servidor de dashboard y API REST scripts/serve-dashboard.ts debe existir",
+      "type": "file_exists",
+      "path": "scripts/serve-dashboard.ts"
+    },
+    {
+      "id": "check-notebooklm-pack-data",
+      "description": "El paquete de estudio generado data/ticketmaster_notebooklm_pack.md debe existir",
+      "type": "file_exists",
+      "path": "data/ticketmaster_notebooklm_pack.md"
+    },
+    {
+      "id": "check-expert-insights-data",
+      "description": "El reporte de comentarios de expertos data/ticketmaster_expert_insights.json debe existir",
+      "type": "file_exists",
+      "path": "data/ticketmaster_expert_insights.json"
+    },
+    {
+      "id": "check-typecheck",
+      "description": "La verificación estricta de TypeScript debe pasar al 100%",
+      "type": "command",
+      "command": "npm run typecheck"
+    },
+    {
+      "id": "check-unit-tests",
+      "description": "La suite de pruebas unitarias (22 tests) debe pasar sin errores",
+      "type": "command",
+      "command": "npm test"
+    }
+  ]
+}

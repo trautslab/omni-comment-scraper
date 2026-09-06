@@ -99,7 +99,18 @@ export class InstagramAdapter extends BaseAdapter {
     const metadata = await this.extractMetadata(url, options);
     const shortcode = metadata.id;
 
-    const sessionId = options?.credentials?.sessionId || process.env.INSTAGRAM_SESSION_ID;
+    // Check explicit credentials, then environment variable, then dynamic SessionVault
+    let sessionId = options?.credentials?.sessionId || process.env.INSTAGRAM_SESSION_ID;
+    if (!sessionId) {
+      try {
+        const { SessionVault } = await import('../core/session-vault.js');
+        const vault = new SessionVault();
+        sessionId = vault.getCookie('instagram', 'sessionid') 
+          || vault.getSession('instagram')?.cookies?.['sessionid'];
+      } catch {
+        // Vault optional
+      }
+    }
     const comments: Comment[] = [];
     let requiresAuthForComments = false;
     let authNotice: string | undefined;

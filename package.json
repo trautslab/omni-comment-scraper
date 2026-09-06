@@ -10,9 +10,11 @@
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/validate-task-ids.mjs",
     "validate:tasks": "node scripts/validate-task-ids.mjs",
-    "dashboard": "node scripts/serve-dashboard.mjs",
+    "dashboard": "npx tsx scripts/serve-dashboard.ts",
     "demo:live": "npx tsx scripts/demo-live.ts",
+    "demo:knowledge-lab": "npx tsx scripts/demo-knowledge-lab.ts",
     "eval:task": "node evals/harness.mjs --task task-001",
+    "eval:task:002": "node evals/harness.mjs --task task-002",
     "scrape": "npx tsx src/cli/index.ts"
   },
   "keywords": [

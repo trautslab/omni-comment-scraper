@@ -1,30 +1,29 @@
-# Project State & Handoff (Omni-Platform Comment Scraper)
+# Project State & Handoff (Omni-Platform Comment Scraper & Knowledge Lab)
 
-**Última Actualización:** 2026-09-05 18:00 (UTC-5)  
-**Versión Actual:** `v0.1.0`  
+**Última Actualización:** 2026-09-05 19:50 (UTC-5)  
+**Versión Actual:** `v0.2.0`  
 **Rama Activa:** `main`  
 **Repositorio GitHub:** `https://github.com/trautslab/omni-comment-scraper`  
 
 ---
 
 ## 📍 1. Estado de la Sesión (Dónde quedamos)
-- [x] Scaffolding integral del framework AI-SDLC (Gobernanza, Contratos, Observabilidad).
-- [x] Arquitectura Hexagonal con Registro Dinámico de Adaptadores (`src/core/registry.ts`).
-- [x] Adaptadores funcionales implementados: Instagram, YouTube, TikTok, Telegram, Facebook.
-- [x] Ensayo y validación real sobre el Reel de Instagram [https://www.instagram.com/reels/DVw27-9jGJe/](https://www.instagram.com/reels/DVw27-9jGJe/):
-  - Extracción exitosa de metadatos SSR: Autor (`Arturo Velazquez`), Engagement (`47,000 likes`, `501 comentarios`), caption completo y advertencia estructurada de autenticación para comentarios.
-- [x] Normalizador uniforme (`CommentNormalizer`) con limpieza de texto, detección de sentimiento, extracción de menciones y hashtags.
-- [x] Exportadores probados para JSON y CSV.
-- [x] Suite de 18 pruebas unitarias y de integración pasando al 100%.
-- [x] Harness de evaluación `evals/harness.mjs --task task-001` con 10/10 checks superados.
-- [x] Script `npm run demo:live` ejecutado con éxito y telemetría registrada.
+- [x] **TASK-001 Completada**: Motor hexagonal de scraping, adaptadores (Instagram, YouTube, TikTok, Telegram, Facebook), normalizador y CLI.
+- [x] **TASK-002 Completada**:
+  - `SessionVault`: Bóveda local segura `.sessions/vault.json` con soporte para login interactivo de navegador, importación de cookies y health checks.
+  - `KnowledgeSynthesizer`: Motor de fact-checking contra IETF RFCs (RFC 6585), Cloudflare, Redis, NIST y generación de NotebookLM Study Packs (`.md`).
+  - `ExpertCommentMiner`: Extracción de comentarios de alta señal técnica, filtro de ruido, catálogo de herramientas citadas por la comunidad y temas de estudio derivados.
+  - `serve-dashboard.ts`: Servidor REST + SSE en tiempo real para observabilidad y control.
+  - `observability/index.html`: Dashboard visual renovado con 5 pestañas interactivas.
+- [x] Suite completa de 22 pruebas unitarias pasando al 100%.
+- [x] Harness de evaluación `eval:task:002` con 8/8 checks superados.
+- [x] Verificación en vivo con script `npm run demo:knowledge-lab` generando artefactos reales del post de Ticketmaster.
 
 ---
 
 ## ⚠️ 2. Gotchas, Trampas & Bloqueadores
-- **Instagram Comments Auth**: Instagram exige cookies de sesión activas (`sessionid`) para acceder al hilo de comentarios vía GraphQL. Los metadatos de alto nivel y métricas se extraen sin login utilizando el User-Agent de crawler (`facebookexternalhit/1.1`).
-- **YouTube API Quotas**: La extracción pública básica funciona sin credenciales, pero para hilos extensos de miles de comentarios se recomienda configurar `YOUTUBE_API_KEY`.
-- **Facebook Group/Private Posts**: Posts protegidos requieren cookies (`c_user`, `xs`) o token de página de Meta.
+- **Session Vault Seguridad**: `.sessions/` está estrictamente ignorado en `.gitignore` para evitar filtración accidental de tokens de sesión.
+- **Fact-Checking Grounding**: Las evaluaciones técnicas se basan en especificaciones formales de ingeniería para garantizar rigor en el NotebookLM pack.
 
 ---
 
@@ -33,22 +32,23 @@
 # 1. Typecheck estricto
 npm run typecheck
 
-# 2. Pruebas unitarias e integración (18 tests)
+# 2. Pruebas unitarias e integración (22 tests)
 npm test
 
-# 3. Eval Harness AI-SDLC
+# 3. Eval Harness AI-SDLC (TASK-001 y TASK-002)
 npm run eval:task
+npm run eval:task:002
 
-# 4. Demostración en vivo
-npm run demo:live
+# 4. Demostración en vivo de Knowledge Lab & Minería
+npm run demo:knowledge-lab
 
-# 5. Dashboard de observabilidad
+# 5. Dashboard visual interactivo (http://localhost:3333)
 npm run dashboard
 ```
 
 ---
 
 ## 🎯 4. Próximos 3 Pasos Inmediatos
-1. Agregar soporte para almacenamiento relacional/SQLite o DuckDB para persistencia local de comentarios analizados.
-2. Añadir soporte para adaptadores de Reddit y X (Twitter).
-3. Conectar pipelines de enriquecimiento con LLMs para clasificación avanzada de tópicos y respuestas sugeridas.
+1. Desarrollar extensión de navegador (Chrome / Firefox) para sincronización automática de cookies con 1 clic hacia el endpoint `POST /api/sessions/save`.
+2. Integrar proveedor LLM local (Ollama / Claude / Gemini API) para generación de audio overviews y respuestas automáticas directamente en el dashboard.
+3. Crear adaptador para foros técnicos de Reddit y HackerNews.
