@@ -11,6 +11,7 @@ Este directorio centraliza las investigaciones técnicas y los informes duales (
 | **`REQ-001`** | **Arquitectura de Alta Concurrencia y Mitigación de Bots** (Ticketmaster 2022 - 14M solicitudes concurrentes) | Instagram Reel (`@arturo_velazquez_java`) | [Informe Técnico](REQ-001-ticketmaster-alta-concurrencia-y-bots/informe_tecnico_alta_concurrencia_y_bots.md) | [Informe Ejecutivo](REQ-001-ticketmaster-alta-concurrencia-y-bots/informe_ejecutivo_concurrencia_y_bots.html) | `COMPLETADO` |
 | **`REQ-002`** | **Brecha de Ciberseguridad en Snowflake** (Ticketmaster 560M registros & Banco Santander 30M registros) | Artículo de Investigación (WIRED / Mandiant) | [Informe Técnico](REQ-002-snowflake-brecha-ciberseguridad-cloud/informe_tecnico_remediacion_snowflake.md) | [Informe Ejecutivo](REQ-002-snowflake-brecha-ciberseguridad-cloud/informe_ejecutivo_vulnerabilidad_cloud.html) | `COMPLETADO` |
 | **`REQ-003`** | **Smart Ticketing y Validación Offline** (Caso Quentro: Dynamic QR 15s, TOTP y Transferencias P2P) | Análisis de Plataforma (`quentro.com`) | [Informe Técnico](REQ-003-quentro-smart-ticketing-analisis/informe_tecnico_arquitectura_smart_ticketing.md) | [Informe Ejecutivo](REQ-003-quentro-smart-ticketing-analisis/informe_ejecutivo_smart_ticketing_y_estrategia.html) | `COMPLETADO` |
+| **`REQ-004`** | **Smart Ticketing Next-Gen** (NFC Apple VAS, Google Smart Tap, Malla Mesh P2P, Cámara en Vivo y Geocerca DICE) | Investigación Industrial (Ticketmaster SafeTix, Apple, Google, DICE) | [Informe Técnico](REQ-004-smart-ticketing-nfc-mesh-biometria/informe_tecnico_nfc_camera_mesh_geofence.md) | [Informe Ejecutivo](REQ-004-smart-ticketing-nfc-mesh-biometria/informe_ejecutivo_nfc_camera_mesh_geofence.html) | `COMPLETADO` |
 
 ---
 
@@ -48,3 +49,11 @@ REQ-xxx-[tema]/
 - 🛠️ **Informe Técnico:** [informe_tecnico_arquitectura_smart_ticketing.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-003-quentro-smart-ticketing-analisis/informe_tecnico_arquitectura_smart_ticketing.md)
 - 🏛️ **Informe Ejecutivo (.md):** [informe_ejecutivo_smart_ticketing_y_estrategia.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-003-quentro-smart-ticketing-analisis/informe_ejecutivo_smart_ticketing_y_estrategia.md)
 - 🖨️ **Informe Ejecutivo Print/PDF (.html):** [informe_ejecutivo_smart_ticketing_y_estrategia.html](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-003-quentro-smart-ticketing-analisis/informe_ejecutivo_smart_ticketing_y_estrategia.html)
+
+### REQ-004: Smart Ticketing Next-Gen (NFC Apple VAS, Google Smart Tap, Mesh y Cámara en Vivo)
+- 📦 **NotebookLM Pack:** [notebooklm_source_pack.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-004-smart-ticketing-nfc-mesh-biometria/notebooklm_source_pack.md)
+- ⚡ **Informe Técnico:** [informe_tecnico_nfc_camera_mesh_geofence.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-004-smart-ticketing-nfc-mesh-biometria/informe_tecnico_nfc_camera_mesh_geofence.md)
+- 🏛️ **Informe Ejecutivo (.md):** [informe_ejecutivo_nfc_camera_mesh_geofence.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-004-smart-ticketing-nfc-mesh-biometria/informe_ejecutivo_nfc_camera_mesh_geofence.md)
+- 🖨️ **Informe Ejecutivo Print/PDF (.html):** [informe_ejecutivo_nfc_camera_mesh_geofence.html](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-004-smart-ticketing-nfc-mesh-biometria/informe_ejecutivo_nfc_camera_mesh_geofence.html)
+- 📑 **PDF Oficial Generado:** [Informe Ejecutivo_ Smart Ticketing Next-Gen NFC Mesh y Camara en Vivo.pdf](file:///Users/jlorenzor/Documents/TiketYA/Research/Informe%20Ejecutivo_%20Smart%20Ticketing%20Next-Gen%20NFC%20Mesh%20y%20Camara%20en%20Vivo.pdf)
+
