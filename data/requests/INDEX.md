@@ -10,6 +10,7 @@ Este directorio centraliza las investigaciones técnicas y los informes duales (
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **`REQ-001`** | **Arquitectura de Alta Concurrencia y Mitigación de Bots** (Ticketmaster 2022 - 14M solicitudes concurrentes) | Instagram Reel (`@arturo_velazquez_java`) | [Informe Técnico](REQ-001-ticketmaster-alta-concurrencia-y-bots/informe_tecnico_alta_concurrencia_y_bots.md) | [Informe Ejecutivo](REQ-001-ticketmaster-alta-concurrencia-y-bots/informe_ejecutivo_concurrencia_y_bots.html) | `COMPLETADO` |
 | **`REQ-002`** | **Brecha de Ciberseguridad en Snowflake** (Ticketmaster 560M registros & Banco Santander 30M registros) | Artículo de Investigación (WIRED / Mandiant) | [Informe Técnico](REQ-002-snowflake-brecha-ciberseguridad-cloud/informe_tecnico_remediacion_snowflake.md) | [Informe Ejecutivo](REQ-002-snowflake-brecha-ciberseguridad-cloud/informe_ejecutivo_vulnerabilidad_cloud.html) | `COMPLETADO` |
+| **`REQ-003`** | **Smart Ticketing y Validación Offline** (Caso Quentro: Dynamic QR 15s, TOTP y Transferencias P2P) | Análisis de Plataforma (`quentro.com`) | [Informe Técnico](REQ-003-quentro-smart-ticketing-analisis/informe_tecnico_arquitectura_smart_ticketing.md) | [Informe Ejecutivo](REQ-003-quentro-smart-ticketing-analisis/informe_ejecutivo_smart_ticketing_y_estrategia.html) | `COMPLETADO` |
 
 ---
 
@@ -30,7 +31,7 @@ REQ-xxx-[tema]/
 
 ## 🎯 Acceso Rápido a Informes
 
-### REQ-001: Mitigación de Bots y Alta Concurrencia
+### REQ-001: Mitigación de Bots y Alta Concurrencia (14M)
 - 📦 **NotebookLM Pack:** [notebooklm_source_pack.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-001-ticketmaster-alta-concurrencia-y-bots/notebooklm_source_pack.md)
 - ⚡ **Informe Técnico:** [informe_tecnico_alta_concurrencia_y_bots.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-001-ticketmaster-alta-concurrencia-y-bots/informe_tecnico_alta_concurrencia_y_bots.md)
 - 🏛️ **Informe Ejecutivo (.md):** [informe_ejecutivo_concurrencia_y_bots.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-001-ticketmaster-alta-concurrencia-y-bots/informe_ejecutivo_concurrencia_y_bots.md)
@@ -41,3 +42,9 @@ REQ-xxx-[tema]/
 - 🛡️ **Informe Técnico:** [informe_tecnico_remediacion_snowflake.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-002-snowflake-brecha-ciberseguridad-cloud/informe_tecnico_remediacion_snowflake.md)
 - 🏛️ **Informe Ejecutivo (.md):** [informe_ejecutivo_vulnerabilidad_cloud.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-002-snowflake-brecha-ciberseguridad-cloud/informe_ejecutivo_vulnerabilidad_cloud.md)
 - 🖨️ **Informe Ejecutivo Print/PDF (.html):** [informe_ejecutivo_vulnerabilidad_cloud.html](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-002-snowflake-brecha-ciberseguridad-cloud/informe_ejecutivo_vulnerabilidad_cloud.html)
+
+### REQ-003: Smart Ticketing, QR Dinámico y Control de Acceso Offline (Caso Quentro)
+- 📦 **NotebookLM Pack:** [notebooklm_source_pack.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-003-quentro-smart-ticketing-analisis/notebooklm_source_pack.md)
+- 🛠️ **Informe Técnico:** [informe_tecnico_arquitectura_smart_ticketing.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-003-quentro-smart-ticketing-analisis/informe_tecnico_arquitectura_smart_ticketing.md)
+- 🏛️ **Informe Ejecutivo (.md):** [informe_ejecutivo_smart_ticketing_y_estrategia.md](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-003-quentro-smart-ticketing-analisis/informe_ejecutivo_smart_ticketing_y_estrategia.md)
+- 🖨️ **Informe Ejecutivo Print/PDF (.html):** [informe_ejecutivo_smart_ticketing_y_estrategia.html](file:///Users/jlorenzor/Documents/omni-comment-scraper/data/requests/REQ-003-quentro-smart-ticketing-analisis/informe_ejecutivo_smart_ticketing_y_estrategia.html)

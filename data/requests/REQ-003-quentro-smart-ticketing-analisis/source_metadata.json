@@ -1,0 +1,18 @@
+{
+  "requestId": "REQ-003",
+  "topic": "Análisis de Arquitectura Smart Ticketing: Caso Quentro (Dynamic QR, Offline Validation y Transferencias P2P)",
+  "sourceType": "PLATFORM_ANALYSIS",
+  "sourceUrl": "https://www.quentro.com/",
+  "platform": "Quentro (Smart Tickets Digital Wallet)",
+  "category": "Event Ticketing & Access Control Security",
+  "ingestedAt": "2026-09-07T21:26:00.000Z",
+  "keyCapabilities": [
+    "Dynamic QR Code with 15-second time-based cryptographic rotation",
+    "Offline client-side generation without cellular data / WiFi dependencies",
+    "100% Offline Access Control & Turnstile Validation (HMAC/TOTP RFC 6238)",
+    "Peer-to-Peer (P2P) controlled ticket transfers with identity re-issuance",
+    "Anti-screenshot protection and secure enclave storage",
+    "Integration layer with ticketing giants (Ticketmaster Latin America, festivals, stadium venues)"
+  ],
+  "directApplication": "Arquitectura de emisión y validación de entradas digitales antifraude para plataformas de ticketing modernas (TiketYA Monorepo apps/api context checkin, UC-009 y SEQ-005)"
+}

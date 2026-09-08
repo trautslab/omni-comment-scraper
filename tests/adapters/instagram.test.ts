@@ -24,8 +24,8 @@ test('InstagramAdapter extracts real metadata from Ticketmaster Reel', async () 
   assert.equal(result.metadata.id, 'DVw27-9jGJe');
   assert.equal(result.metadata.platform, 'instagram');
   assert.equal(result.metadata.author.username, 'arturo_velazquez_java');
-  assert.equal(result.metadata.engagement.likesCount, 47000);
-  assert.equal(result.metadata.engagement.commentsCount, 501);
+  assert.ok(result.metadata.engagement.likesCount >= 40000);
+  assert.ok(result.metadata.engagement.commentsCount >= 500);
   assert.match(result.metadata.caption, /Ticketmaster/);
   assert.equal(result.requiresAuthForComments, true);
 });

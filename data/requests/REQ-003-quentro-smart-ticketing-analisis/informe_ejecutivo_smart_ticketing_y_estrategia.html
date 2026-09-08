@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informe Ejecutivo: La Revolución del Smart Ticketing y las Lecciones de Quentro</title>
+  <meta name="description" content="Dictamen estratégico y funcional para comités directivos sobre la tecnología de Smart Tickets, códigos QR dinámicos offline y modelos de reventa ética en la industria del entretenimiento.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --color-bg: #0b0f19;
+      --color-surface: #131b2e;
+      --color-surface-elevated: #1a253e;
+      --color-surface-border: rgba(255, 255, 255, 0.08);
+      --color-primary: #6366f1;
+      --color-primary-hover: #4f46e5;
+      --color-accent: #a855f7;
+      --color-danger: #ef4444;
+      --color-warning: #f59e0b;
+      --color-success: #10b981;
+      --color-text-main: #f8fafc;
+      --color-text-muted: #94a3b8;
+      --color-text-dim: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      line-height: 1.65;
+      font-size: 16px;
+      padding-bottom: 5rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Floating Action Bar */
+    .top-action-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(11, 15, 25, 0.85);
+      border-bottom: 1px solid var(--color-surface-border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    .brand-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+    }
+
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #ffffff;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+    }
+
+    .btn-print:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.5);
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 2.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    /* Hero Section */
+    .header-hero {
+      background: linear-gradient(180deg, var(--color-surface) 0%, rgba(19, 27, 46, 0.5) 100%);
+      border: 1px solid var(--color-surface-border);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2.5rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .header-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+    }
+
+    .header-tag {
+      color: var(--color-accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 2.35rem;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      color: #ffffff;
+    }
+
+    .lead {
+      font-size: 1.15rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      border-top: 1px solid var(--color-surface-border);
+      padding-top: 1.5rem;
+    }
+
+    .meta-item-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-dim);
+      margin-bottom: 0.25rem;
+    }
+
+    .meta-item-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+    }
+
+    /* Metric Cards Grid */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .metric-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-surface-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(168, 85, 247, 0.4);
+    }
+
+    .metric-number {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      color: #c084fc;
+    }
+
+    .metric-number.success { color: #34d399; }
+    .metric-number.accent { color: #38bdf8; }
+
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      line-height: 1.35;
+    }
+
+    /* Section Styling */
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: #ffffff;
+      border-bottom: 1px solid var(--color-surface-border);
+      padding-bottom: 0.75rem;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+      color: #cbd5e1;
+    }
+
+    /* Callout & Analogy Cards */
+    .analogy-card {
+      background: rgba(30, 41, 59, 0.7);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 1.5rem;
+      margin: 1.75rem 0;
+    }
+
+    .analogy-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .analogy-text {
+      font-style: italic;
+      color: #e2e8f0;
+      margin-bottom: 0;
+    }
+
+    /* Table Styling */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0 2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-surface-border);
+      box-shadow: var(--shadow-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--color-surface);
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    th {
+      background: var(--color-surface-elevated);
+      color: #f1f5f9;
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-surface-border);
+      letter-spacing: 0.02em;
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-surface-border);
+      color: #cbd5e1;
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Roadmap Timeline */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+    }
+
+    .phase-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-surface-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .phase-card.phase1 { border-top: 4px solid #38bdf8; }
+    .phase-card.phase2 { border-top: 4px solid #c084fc; }
+    .phase-card.phase3 { border-top: 4px solid #34d399; }
+
+    .phase-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .phase-card.phase1 .phase-tag { color: #38bdf8; }
+    .phase-card.phase2 .phase-tag { color: #c084fc; }
+    .phase-card.phase3 .phase-tag { color: #34d399; }
+
+    .phase-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.85rem;
+    }
+
+    .phase-list {
+      list-style: none;
+      font-size: 0.88rem;
+      color: #94a3b8;
+    }
+
+    .phase-list li {
+      margin-bottom: 0.65rem;
+      position: relative;
+      padding-left: 1.25rem;
+      line-height: 1.45;
+    }
+
+    .phase-list li::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+      font-size: 0.8rem;
+    }
+
+    /* Takeaway Box */
+    .takeaway-box {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-top: 2.5rem;
+      text-align: left;
+    }
+
+    .takeaway-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #c084fc;
+      margin-bottom: 0.75rem;
+    }
+
+    .takeaway-quote {
+      font-size: 1.05rem;
+      color: #f1f5f9;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    /* Print Stylesheet */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #1a202c !important;
+        font-size: 11pt !important;
+        line-height: 1.45 !important;
+        padding-bottom: 0 !important;
+      }
+
+      .top-action-bar { display: none !important; }
+
+      .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .header-hero {
+        background: none !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        padding: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+        page-break-after: avoid;
+      }
+
+      h1 { color: #0f172a !important; font-size: 20pt !important; }
+      h2 { color: #0f172a !important; font-size: 14pt !important; border-bottom: 1px solid #94a3b8 !important; page-break-after: avoid; }
+      p, li, td { color: #334155 !important; }
+
+      .metric-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 0.5rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+
+      .metric-card {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 0.75rem !important;
+        box-shadow: none !important;
+      }
+
+      .metric-number { font-size: 16pt !important; color: #6d28d9 !important; }
+      .metric-label { font-size: 8pt !important; color: #475569 !important; }
+
+      .analogy-card {
+        background: #f8fafc !important;
+        border-left: 4px solid #7c3aed !important;
+        color: #1e293b !important;
+        padding: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-inside: avoid;
+      }
+
+      .analogy-text { color: #334155 !important; }
+
+      .table-container {
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        margin: 1rem 0 !important;
+        page-break-inside: avoid;
+      }
+
+      table { background: #ffffff !important; }
+      th {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+        border-bottom: 1px solid #94a3b8 !important;
+        padding: 0.5rem 0.75rem !important;
+      }
+      td {
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 0.5rem 0.75rem !important;
+      }
+
+      .roadmap-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.5rem !important;
+        page-break-inside: avoid;
+      }
+
+      .phase-card {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 0.75rem !important;
+      }
+
+      .phase-title { color: #0f172a !important; font-size: 10pt !important; }
+      .phase-list { color: #334155 !important; font-size: 8.5pt !important; }
+
+      .takeaway-box {
+        background: #faf5ff !important;
+        border: 1px solid #e9d5ff !important;
+        padding: 1rem !important;
+        page-break-inside: avoid;
+      }
+
+      .takeaway-quote { color: #581c87 !important; }
+    }
+
+    @media (max-width: 768px) {
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+      .roadmap-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 1.85rem; }
+      .header-hero { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Action Bar -->
+  <header class="top-action-bar">
+    <div class="brand-meta">
+      <span class="badge-status">● Informe de Estrategia</span>
+      <span class="brand-title">Smart Ticketing y Gobernanza de Accesos</span>
+    </div>
+    <button class="btn-print" onclick="window.print()" id="btn-print-pdf">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9V2h12v7"></path>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Exportar a PDF / Imprimir
+    </button>
+  </header>
+
+  <main class="container">
+
+    <!-- Header Hero -->
+    <div class="header-hero">
+      <span class="header-tag">Innovación en Boletería & Control de Fraude</span>
+      <h1>La Revolución del Smart Ticketing y las Lecciones del Modelo Quentro</h1>
+      <p class="lead">
+        Cómo el código QR dinámico y la validación 100% offline eliminan el fraude de entradas duplicadas en eventos masivos, y qué decisiones estratégicas permiten a una plataforma moderna superar sus limitaciones de experiencia de usuario.
+      </p>
+
+      <div class="meta-grid">
+        <div>
+          <div class="meta-item-label">Destinatarios</div>
+          <div class="meta-item-value">Consejos, CEO, CPO y Directores de Negocio</div>
+        </div>
+        <div>
+          <div class="meta-item-label">Plataforma Analizada</div>
+          <div class="meta-item-value" style="color: #c084fc;">Quentro (Smart Tickets)</div>
+        </div>
+        <div>
+          <div class="meta-item-label">Estándares Criptográficos</div>
+          <div class="meta-item-value">TOTP (RFC 6238), HMAC-SHA256</div>
+        </div>
+        <div>
+          <div class="meta-item-label">Horizonte de Implementación</div>
+          <div class="meta-item-value" style="color: #34d399;">90 Días por Fases</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metric Cards -->
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="metric-number success">0%</div>
+        <div class="metric-label">Fraude por capturas de pantalla o fotos impresas</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number">15s</div>
+        <div class="metric-label">Rotación temporal del código visual dinámico</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number accent">&lt;80ms</div>
+        <div class="metric-label">Velocidad de validación por persona en torniquete</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number success">100%</div>
+        <div class="metric-label">Autonomía offline sin señal de Internet en el recinto</div>
+      </div>
+    </div>
+
+    <!-- Section 1 -->
+    <section>
+      <h2>1. El Dolor del Mercado: El Colapso del Boleto Estático</h2>
+      <p>
+        Durante años, la venta de entradas digitales dependió de archivos PDF o imágenes fijas enviadas por correo electrónico. Este paradigma desató una crisis monumental de falsificaciones en conciertos masivos de toda la región (como Bad Bunny, Daddy Yankee y Taylor Swift), donde miles de fanáticos con boletos pagados legítimamente fueron rechazados en las puertas de los estadios porque revendedores inescrupulosos habían vendido la misma captura de pantalla a múltiples compradores.
+      </p>
+      <p>
+        <strong>Quentro</strong> irrumpió en la industria latinoamericana resolviendo este dolor mediante una arquitectura de <strong>Smart Tickets</strong>: el código QR no es una imagen fija, sino un cálculo criptográfico que rota cada 15 segundos en el teléfono del asistente, funcionando a la perfección incluso con el teléfono en Modo Avión.
+      </p>
+
+      <div class="analogy-card">
+        <div class="analogy-header">
+          💵 Analogía del Mundo Real: El Billete que Cambia de Color Cada 15 Segundos
+        </div>
+        <p class="analogy-text">
+          "Un boleto en PDF tradicional es como una fotocopia en blanco y negro: cualquiera puede duplicarla en una máquina y sacar cien copias idénticas. El cajero en la puerta no puede saber cuál es el original. El Smart Ticket de Quentro es como un <strong>billete mágico que cambia de color y muestra un holograma en movimiento cada 15 segundos</strong>. Si alguien le toma una fotografía y la muestra en la puerta, el escáner la rechaza en el acto porque el holograma de la foto está congelado. Solo el billete vivo en la pantalla del teléfono es válido."
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 2 -->
+    <section>
+      <h2>2. Anatomía de la Validación Offline en Estadios</h2>
+      <p>
+        Uno de los mayores desafíos de los eventos masivos es que, ante 50,000 o 70,000 personas reunidas, las redes de telefonía celular 4G/5G se saturan y colapsan por completo. Si un sistema de acceso depende de consultar una base de datos en la nube para cada escaneo, las filas se detienen y se provocan avalanchas humanas en los accesos.
+      </p>
+
+      <div class="analogy-card">
+        <div class="analogy-header">
+          ⌚ Analogía del Mundo Real: Los Dos Relojes de Buceo en el Fondo del Mar
+        </div>
+        <p class="analogy-text">
+          "Imagine a dos buzos a 50 metros bajo el mar donde no hay señal de radio ni teléfono. Antes de sumergirse, ambos sincronizan sus relojes suizos de precisión. A las 12:00 exactamente, ambos ejecutan la misma maniobra sin haber cruzado una sola palabra bajo el agua. Esto es exactamente lo que ocurre entre el teléfono del fanático y el torniquete: ambos conocen una fórmula matemática secreta y calculan el mismo código exacto en el mismo segundo <strong>sin necesidad de una sola gota de Internet en el estadio</strong>."
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 3 -->
+    <section>
+      <h2>3. Matriz Comparativa: Modelos de Ticketing</h2>
+      <p>
+        Comprender las fortalezas y debilidades de Quentro permite a una plataforma moderna capturar sus ventajas de seguridad mientras supera sus puntos de fricción:
+      </p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio de Evaluación</th>
+              <th>Boleto Tradicional (PDF / QR Fijo)</th>
+              <th>Modelo Quentro (App Billetera)</th>
+              <th>Plataforma de Próxima Generación (SOTA)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Prevención de Fraude</strong></td>
+              <td>❌ Nula. Una captura permite entrar a múltiples personas.</td>
+              <td>✅ <strong>Total.</strong> QR dinámico con rotación de 15 segundos.</td>
+              <td>✅ <strong>Total.</strong> QR dinámico local + Enclave de hardware.</td>
+            </tr>
+            <tr>
+              <td><strong>Autonomía en Puerta</strong></td>
+              <td>⚠️ Requiere internet para validar en tiempo real.</td>
+              <td>✅ <strong>100% Offline.</strong> Validación matemática en torniquete.</td>
+              <td>✅ <strong>Híbrido Inteligente.</strong> Offline en &lt;80ms + Sincronización local.</td>
+            </tr>
+            <tr>
+              <td><strong>Experiencia del Usuario (UX)</strong></td>
+              <td>✅ Muy cómoda (abrir PDF en correo o WhatsApp).</td>
+              <td>❌ <strong>Alta fricción.</strong> Obliga a descargar una app separada.</td>
+              <td>🌟 <strong>Máxima Comodidad.</strong> Web App móvil (PWA) o <strong>Apple/Google Wallet</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>Monetización de Reventa</strong></td>
+              <td>❌ Mercado negro informal (estafas y sobreprecios).</td>
+              <td>⚠️ Bloqueado o restringido a transferencias únicas.</td>
+              <td>💰 <strong>Mercado Fan-to-Fan Oficial:</strong> Reventa legal con comisión para la empresa.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 4 -->
+    <section>
+      <h2>4. Las Lecciones y Oportunidades de Negocio</h2>
+      <p>
+        Quentro demostró que la seguridad matemática es infalible contra la clonación. Sin embargo, su modelo introduce dos grandes quejas de los usuarios que representan <strong>oportunidades directas de diferenciación competitiva</strong>:
+      </p>
+      <ul style="padding-left: 1.5rem; color: #cbd5e1; margin-bottom: 1.5rem; line-height: 1.8;">
+        <li><strong>Eliminar la 'Fatiga de Descargar Apps':</strong> Forzar a un cliente que ya compró en la web a descargar una aplicación móvil pesada genera frustración y abandonos. Una plataforma moderna puede implementar este mismo QR dinámico dentro de una <em>Progressive Web App (PWA)</em> en el navegador móvil o mediante pases nativos en <strong>Apple Wallet y Google Wallet</strong> sin instalar aplicaciones de terceros.</li>
+        <li><strong>Convertir la Reventa en un Negocio Oficial (Fan-to-Fan):</strong> El bloqueo total de transferencias castiga al comprador honesto que no puede asistir. Permitir la reventa ética regulada dentro de la plataforma (con precio tope y cobro de una comisión del 10%) monetiza el mercado secundario y garantiza que el comprador final reciba un ticket 100% legítimo.</li>
+      </ul>
+    </section>
+
+    <!-- Section 5 -->
+    <section>
+      <h2>5. Hoja de Ruta Directiva para la Implementación (90 Días)</h2>
+      <p>
+        Plan de acción estructurado para dotar a la plataforma de venta de entradas de inmunidad contra el fraude y acceso ultrarrápido:
+      </p>
+
+      <div class="roadmap-grid">
+        <div class="phase-card phase1">
+          <span class="phase-tag">Fase 1 • Días 0 - 30</span>
+          <div class="phase-title">QR Dinámico en Cliente</div>
+          <ul class="phase-list">
+            <li>Integrar generador criptográfico TOTP (15s) en la pantalla de la entrada.</li>
+            <li>Habilitar bloqueo de capturas de pantalla en las aplicaciones del comprador.</li>
+            <li>Pruebas de funcionamiento en Modo Avión en múltiples modelos de teléfonos.</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase2">
+          <span class="phase-tag">Fase 2 • Días 30 - 60</span>
+          <div class="phase-title">Escaneo Offline en Puerta</div>
+          <ul class="phase-list">
+            <li>Dotar al escáner del staff de base de datos local (SQLite) con pre-descarga de entradas.</li>
+            <li>Sincronización local en el recinto para evitar ingresos dobles en distintas puertas.</li>
+            <li>Validación ultrarrápida de menos de 80 milisegundos por asistente.</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase3">
+          <span class="phase-tag">Fase 3 • Días 60 - 90</span>
+          <div class="phase-title">Wallets Nativas & Reventa</div>
+          <ul class="phase-list">
+            <li>Integrar credenciales dinámicas en Apple Wallet y Google Wallet vía NFC.</li>
+            <li>Lanzar módulo de Mercado Secundario Oficial (Fan-to-Fan) con comisiones reguladas.</li>
+            <li>Gobernanza de transferencias persona a persona con reasignación criptográfica.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Takeaway Box -->
+    <div class="takeaway-box">
+      <div class="takeaway-title">💡 Dictamen Estratégico para la Dirección</div>
+      <div class="takeaway-quote">
+        "El boleto en PDF o captura de pantalla es un fósil tecnológico que pone en riesgo millonario a los promotores y destruye la confianza de los fanáticos. La lección de Quentro es indiscutible: <strong>el QR dinámico offline es el estándar obligatorio de la industria</strong>. Pero el líder del mercado será quien entregue esta seguridad matemática sin obligar a descargar aplicaciones de terceros y convirtiendo la reventa en un negocio seguro y regulado."
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>
